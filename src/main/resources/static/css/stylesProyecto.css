@@ -1,0 +1,71 @@
+body{
+   background-image: url("/Images/gris.png");	
+   background-size: 1920px 1020px;
+}
+
+#inputTarea{
+	display: none;
+}
+#btnTarea{
+	display: none;
+}
+#inputTarea2{
+	display: none;
+}
+#btnTarea2{
+	display: none;
+}
+#inputTarea3{
+	display: none;
+}
+#btnTarea3{
+	display: none;
+}
+
+#inputFecha{
+	display: none;
+}
+
+#inputFechas{
+	display: none;
+}
+
+#btnTarea{
+	background-color: #6610f2;
+	color: white;
+	font-weight: bold;
+}
+#btnTarea2{
+	background-color: #6610f2;
+	color: white;
+	font-weight: bold;
+}
+#btnTarea3{
+	background-color: #6610f2;
+	color: white;
+	font-weight: bold;
+}
+
+.dropdown-menu{
+	background-color: black;
+}
+
+.dropdown-menu .dropdown-item{
+	color: white;
+}
+
+.dropdown-menu .dropdown-item:hover{
+	background-color: white;
+	color: black;
+}
+
+#imagenUsuario{
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+}
+
+

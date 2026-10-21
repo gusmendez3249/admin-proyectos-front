@@ -1,0 +1,36 @@
+services:
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    restart: unless-stopped
+
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    restart: unless-stopped
+
+  # Veracode Pipeline Scan es una herramienta CLI: no expone puertos ni queda corriendo.
+  # Se ejecuta bajo demanda (ver README.md). Este servicio solo sirve para descargar la imagen.
+  veracode-pipeline-scan:
+    image: veracode/pipeline-scan:latest
+    container_name: veracode-pipeline-scan
+    profiles: ["tools"]
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  jenkins_home:

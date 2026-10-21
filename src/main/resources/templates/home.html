@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--<html lang="es" xmlns:th="http://www.thymeleaf.org">-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú</title>
+    <link rel="icon" th:href="@{Images/icono.ico}">
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{css/pplmproyecto.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <style>
+        /* CSS para ventana flotante */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid #007bff;
+        }
+
+        .popup h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .popup p {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #007bff;
+            font-size: 24px;
+        }
+
+        .popup button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .popup button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 600px) {
+            .popup {
+                width: 90%;
+            }
+        }
+
+        /* Animación para la ventana flotante */
+        .popup {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <a href="#" class="enlace">
+            <img th:src="@{Images/logo.png}" id="logo">
+        </a>
+        <ul>
+			<li><a th:href="@{/login}" id="ingresar">Ingresar</a></li>
+            <!--<li><a href="#" id="registro">Registro</a></li>
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#">Proyectos</a></li>-->
+            <li><a href="#" id="acerca-del-proyecto">Acerca del Proyecto</a></li>
+            <li><a href="#" id="contacto">Contacto</a></li>
+            <li><a href="#" id="ayuda">Ayuda</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Ventana flotante "Ayuda" -->
+    <div class="overlay" id="overlay-ayuda">
+        <div class="popup" id="popup-ayuda">
+			<h2>Ayuda</h2>
+			<p>Selecciona una opción:</p>
+			<a href="/tutorial" class="btn btn-primary">Tutorial</a>
+			<a href="/manual" class="btn btn-primary">Manual</a>
+		    <button onclick="closePopup('overlay-ayuda')">Cerrar</button>
+
+
+            <!--<a href="/tutorial"></a>
+            <a href="/manual"></a>
+            <button onclick="closePopup('overlay-ayuda')">Cerrar</button>-->
+        </div>
+    </div>
+
+    <!-- Ventana flotante "Acerca del Proyecto" -->
+    <div class="overlay" id="overlay-proyecto">
+        <div class="popup" id="popup-proyecto">
+            <h2>¿Qué es?</h2>
+            <p>“Project.pplm” es una herramienta para la gestión de proyectos dedicada a ayudar a equipos a planificar, ejecutar y 
+                controlar sus proyectos de manera eficiente y colaborativa. Con herramientas de seguimiento y comunicación facilitando 
+                la coordinación y el éxito en cada etapa del proyecto, desde la concepción hasta la entrega final. Está dirigido a todo 
+                tipo de público con interés de manejar de una manera más eficiente su proyecto. Puede ser utilizado por cualquier persona 
+                pues se puede gestionar desde la construcción de una obra hasta un proyecto escolar. 
+                Además, tiene una interfaz amigable y fácil de entender.
+            </p>
+            <button onclick="closePopup('overlay-proyecto')">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Ventana flotante "Contacto" -->
+    <div class="overlay" id="overlay-contacto">
+        <div class="popup" id="popup-contacto">
+            <h2>Dudas y sugerencias</h2>
+            <p>Comunícate a los siguientes correos electrónicos: <br>
+               perla22522@cbtis75.edu.mx <br>
+               liliana22512@cbtis75.edu.mx <br>
+               marissa22517@cbtis75.edu.mx <br>
+               ana22533@cbtis75.edu.mx <br>
+            </p>
+            <button onclick="closePopup('overlay-contacto')">Cerrar</button>
+        </div>
+    </div>
+   
+    <!-- Formulario de registro 
+    <div class="overlay" id="overlay-registro">
+        <div class="popup" id="popup-registro">
+            <h2>Registro</h2>
+            <p>Por favor, complete el siguiente formulario para registrarse.</p>
+            <form id="form-registro">
+                <div class="form-group">
+                    <label for="usuario">Usuario:</label>
+                    <input type="text" id="usuario" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo electrónico:</label>
+                    <input type="email" id="email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="rol">Rol:</label>
+                  <select id="rol" class="form-control">
+                  <option value="estudiante">Estudiante</option>
+                  <option value="docente">Docente</option>
+                  </select>
+                   </div>
+                <button type="submit">Registrar</button>
+            </form>
+            <button onclick="closePopup('overlay-registro')">Cerrar</button>
+        </div>
+    </div>-->
+    <section>
+        <img th:src="@{Images/fondo.jpg}" class="img-fluid" alt="BIENVENIDOS" id="fondo">
+    </section>
+    <script th:src="@{js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{js/pplmproyecto.js}"></script>
+    <script>
+        function openPopup(id) {
+            document.getElementById(id).style.display = "block";
+        }
+        function closePopup(id) {
+            document.getElementById(id).style.display = "none";
+        }
+        var ayudaLink = document.querySelector('#ayuda');
+        ayudaLink.addEventListener('click', function(event){
+			event.preventDefault();
+			openPopup('overlay-ayuda');
+		})
+        var acercadelproyectoLink = document.querySelector('#acerca-del-proyecto');
+        acercadelproyectoLink.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            openPopup('overlay-proyecto'); 
+        });
+        var contactoLink = document.querySelector('#contacto');
+        contactoLink.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            openPopup('overlay-contacto'); 
+        });
+        var registroLink = document.querySelector('#registro');
+        registroLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            openPopup('overlay-registro');
+        });
+    </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var formRegistro = document.getElementById('form-registro');
+
+        formRegistro.addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            var nombre = document.getElementById('nombre').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            if (nombre === '' || email === '' || password === '') {
+               
+                alert('Por favor, completa todos los campos.');
+                return;
+            }
+            formRegistro.submit();
+        });
+    });
+</script>
+
+</body>
+
+</html>

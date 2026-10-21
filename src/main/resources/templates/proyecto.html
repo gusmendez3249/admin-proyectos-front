@@ -1,0 +1,402 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project.ppml</title>
+    <link rel="icon" th:href="@{Images/icono.ico}">
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{css/stylesProyecto.css}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<script th:src="@{js/jquery-3.7.1.min.js}"></script>
+<script th:src="@{js/popper.min.js}"></script>
+<script th:src="@{js/bootstrap.js}"></script>
+<script th:src="@{js/proyecto.js}"></script>
+<body>
+
+    <!--Encabezado-->
+    
+    <nav class="navbar bg-body-tertiary navbar-expand-md">
+        <div class="container-fluid">
+          <a class="navbar-brand">
+            <img th:src="@{Images/logo.png}" th:onclick="IrInicio();" alt="Logo" width="35" height="24" class="d-inline-block align-text-top">
+            Project.ppml
+          </a>
+          <button class="btn btn-outline-link btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+	          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-list" viewBox="0 0 16 16">
+				  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+			  </svg>
+		  </button>
+		  
+		  <!--<img src="https://github.com/mdo.png" width="32" height="32" class="rounded-circle me-2">-->
+		  
+        </div>
+      </nav>
+      
+      <input type="hidden" id="IdProyectoURL">
+
+	<!--Despliegue lateral izquierdo-->
+	<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+	  <div class="offcanvas-header">
+	    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Proyecto</h5>
+	    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	  </div>
+	  <div class="offcanvas-body">
+	    <p id="despliegueDescripcion">Lorem ipsum dolor sit amet consectetur adipisicing elit.Vitae ex distinctio dolor molestiae fugit laudantium quia commodi quaerat sint?</p>
+	    
+	    <!--Listas-->
+	    <div class="list-group">
+		  <a class="list-group-item list-group-item text-bord fw-bold border-start-0 border-end-0">Listas</a>
+		  
+		  <div class="dropdown">
+			  <button class="list-group-item list-group-item-action" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+			    Tareas pendientes
+			  </button>
+			  <ul class="dropdown-menu" id="dropdownPendientes">
+			  </ul>
+		  </div>
+		  
+		  <div class="dropdown">
+			  <button class="list-group-item list-group-item-action" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+			    En curso
+			  </button>
+			  <ul class="dropdown-menu" id="dropdownEnCurso">
+			  </ul>
+		  </div>
+		  
+		  <div class="dropdown">
+			  <button class="list-group-item list-group-item-action" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+			    Trabajo terminado
+			  </button>
+			  <ul class="dropdown-menu" id="dropdownTerminado">
+			  </ul>
+		  </div>
+		</div>
+		
+		<!--Miembros-->
+		<div class="list-group">
+		    <a class="list-group-item list-group-item text-bord fw-bold border-start-0 border-end-0 mt-5 mb-3">Miembros</a>
+			<div id="miembrosLateral"></div>  
+		</div>
+	
+		<!--Usuario-->
+			<hr>
+			<div class="row d-flex">
+				<label id="Nombre" class="mt-0s d-flex justify-content-start">Perla Joceline Martínez Meza</label>
+				<label id="Email" class="mb-3 mt-1s d-flex justify-content-start">perla22522@cbtis75.edu.mx</label>
+				<div id="imagenUsuario" class="me-2 mt-2 mb-3 rounded-circle d-flex justify-content-end"><p class="fw-bolder fs-1 text-uppercase"><strong class="" id="inicial"></strong></p></div>
+			</div>
+	  </div> 
+	</div>	
+	
+	
+	<!--Listas-->
+	<div class="container text-center text-dark mt-5 mx-flex">
+	  <div class="row align-items-center justify-content-center p-3 mb-5 bg-transparent rounded">
+		
+	   <!--Lista Tareas pendientes-->
+      <div class="card text-center mb-3 mx-3" style="width: 18rem;" id="lstTareasPendientes">
+			<div class="fs-4 mb-3 mt-3 ms-0">
+			       Tareas pendientes
+			</div>
+			<div id="tareasPendientes">
+				<ul class="my-2">
+					<li>
+					    <div class="my-2 badge text-bg-light-subtle d-grid gap-2">
+							<button type="button" class="btn btn-light text-start" data-bs-toggle="modal" data-bs-target="#editarTarea">Realizar infografia</button>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="mb-3 mt-0">
+			<form >
+ 					<input type="text" id="inputTarea" class="form-control mt-0" placeholder="Escribe una nueva tarea">
+ 					<input type="hidden" id="estado" value="pendientes">
+					<button type="button" id="btnTarea" onclick="validarTarea()" class="btn btn-indigo btn-sm mt-2">guardar</button>
+			</form>
+			</div>
+			<div class="list-group mb-3">
+				<button type="button" th:onclick="newTarea()" class="btn btn-dark" id="btnAgregarTarea">+ A&ntilde;adir tarea</button>
+			</div>
+		</div>
+		
+		
+		<!--Lista En curso-->
+		<div class="card text-center mb-3 mx-3" style="width: 18rem;" id="lstEnCurso">
+			<div class="fs-4 mb-3 mt-3 ms-0">
+			    En curso
+			</div>
+			<div id="enCurso">
+				<ul class="my-2">
+					<li>
+					    <div class="my-2 badge text-bg-light-subtle d-grid gap-2">
+							<button type="button" class="btn btn-light text-start">Hacer canva</button>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="mb-3 mt-0">
+			<form>
+				<input type="text" id="inputTarea2" class="form-control mt-0" placeholder="Escribe una nueva tarea">
+				<input type="hidden" id="estado2" value="encurso">
+				<button type="button" id="btnTarea2" onclick="validarTarea2()" class="btn btn-indigo btn-sm mt-2">guardar</button>
+			</form>
+			</div>
+			<div class="list-group mb-3">
+				<button type="button" class="btn btn-dark" id="btnAgregarTarea2" th:onclick="newTarea2()">+ A&ntilde;adir tarea</button>
+			</div>
+		</div>
+			
+		<!--Lista Trabajo terminado-->
+		<div class="card text-center mb-3 mx-3" style="width: 19rem;" id="lstTrabajoTerminado">
+			<div class="fs-4 mb-3 mt-3 ms-0">
+			    Trabajos terminados
+			</div>
+			<div id="trabajoTerminado">
+				<ul class="my-2">
+					<li>
+					    <div class="my-2 badge text-bg-light-subtle d-grid gap-2">
+							<button type="button" class="btn btn-light text-start">Hacer investigacion</button>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="mb-3 mt-0">
+			<form>
+				<input type="text" id="inputTarea3" class="form-control mt-0" placeholder="Escribe una nueva tarea">
+				<input type="hidden" id="estado3" value="terminado">
+				<button type="button" id="btnTarea3" onclick="validarTarea3()" class="btn btn-indigo btn-sm mt-2">guardar</button>
+			</form>
+			</div>
+			<div class="list-group mb-3">
+				<button type="button" class="btn btn-dark" id="btnAgregarTarea3" th:onclick="newTarea3()">+ A&ntilde;adir tarea</button>
+			</div>
+		</div>
+		
+		
+		<!--modalTresPuntitos de Tareas Pendientes-->
+		<div class="modal modal-sm fade" id="tresPuntitosTP" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="exampleModalLabel">Editar lista</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+				<form>
+		          <div class="mb-3">
+		            <p for="recipient-name" class="col-form ms-0 mb-2 text-start">Nombre:</p>
+		            <input type="text" class="form-control" id="recipient-name" placeholder="Nuevo nombre de lista">
+		          </div>
+		        </form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+		        <button type="button" class="btn btn-primary">Guardar cambios</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!--modalTresPuntitos de En curso-->
+		<div class="modal modal-sm fade" id="tresPuntitosEC" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="exampleModalLabel">Editar lista</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+				<form>
+		          <div class="mb-3">
+		            <p for="recipient-name" class="col-form ms-0 mb-2 text-start">Nombre:</p>
+		            <input type="text" class="form-control" id="recipient-name" placeholder="Nuevo nombre de lista">
+		          </div>
+		        </form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+		        <button type="button" class="btn btn-primary">Guardar cambios</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!--modalTresPuntitos de Trabajos Terminados-->
+		<div class="modal modal-sm fade" id="tresPuntitosTT" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="exampleModalLabel">Editar lista</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+				<form>
+		          <div class="mb-3">
+		            <p for="recipient-name" class="col-form ms-0 mb-2 text-start">Nombre:</p>
+		            <input type="text" class="form-control" id="recipient-name" placeholder="Nuevo nombre de lista">
+		          </div>
+		        </form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+		        <button type="button" class="btn btn-primary">Guardar cambios</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!--modalTarea-->
+		<div class="modal modal-lg fade" id="editarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		    <div class="modal-content">
+				<form method="post" th:action="saveTarea" th:object="${tarea}">
+			      <div class="modal-header">
+			        <h1 class="modal-title fs-5" id="nameTarea"></h1>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        <div class="container text-center">
+					  <div class="row">
+					    <div class="col">
+					      <p class="col-form ms-0 mb-2 text-start"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-justify-left" viewBox="0 0 16 16">
+							  <path fill-rule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+							</svg> Descripci&oacute;n:</p>
+							
+						  <input type="hidden" id="id_tarea" th:field="*{id_tarea}">
+						  <input type="hidden" id="nombre" th:field="*{nombre}">
+						  <input type="hidden" id="id_proyecto" th:field="*{id_proyecto}">
+						  <textarea th:field="*{descripcion}" type="text" class="form-control" id="descripcionT" maxlength="100" rows="3" placeholder="A&ntilde;adir una descripci&oacute;n mas detallada..."></textarea>
+						 <hr>
+						 
+						 <div class="input-group mb-3 mt-3">
+								  
+								  <div class="form-floating">
+								    <input type="text" class="form-control" id="comentarioT" placeholder="Comentario">
+								    <label for="floatingInputGroup1">Comentario</label>
+								  </div>
+								  
+								  <span class="input-group-text">
+									  <button type="button" class="border border-0 bg-light" th:onclick="guardarComentario()" >
+										  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+											  <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+										  </svg>
+									  </button>
+								  </span>
+								  
+								  
+							 </div>
+							 
+							 <div id="contenedorComentario">
+								 
+								  <div class="text-start">
+								    <strong class="me-auto">Liliana Gómez Martínez</strong>
+								    <small class="text-body-secondary">11 mins ago</small>
+								    
+								  </div>
+								  <div>
+								    Hello, world! This is a toast message.
+								  </div>
+							 </div>
+					    </div>
+					    <div class="col text-start">
+							<p class="mb-0"><strong>Añadir a la tarjeta</strong></p>
+					      
+					      <div class="text-start btn-group-vertical mt-2" role="group" aria-label="Vertical button group">
+							  <!--
+								  <button href="#" type="button" class="bg-secondary-subtle m-1 p-2 border border-0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+									  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+									</svg>  Miembros</button>
+									-->
+									
+									<select class="my-2" th:field="*{estado}" id="etiqueta">
+										<option value="0" selected>Selecciona una opci&oacute;n</option>
+										<option value="danger" class="bg-danger text-light">Emergencia</option>
+										<option value="warning" class="bg-warning text-light">Urgente</option>
+										<option value="success" class="bg-success text-light">Urgencia menor</option>
+										<option value="primary" class="bg-primary text-light">Sin urgencia</option>
+									</select>
+									
+								  <button type="button" th:onclick="Fechas()" class="bg-light-subtle m-1 p-2 border border-0" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="Right popover"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+									  <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+									  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+									</svg> Fechas
+									<input th:field="*{fecha_vencimiento}" type="date" id="inputFechas">
+								</button>
+								
+								<p class="mt-4"><strong>Acciones</strong></p>
+								<select th:field="*{lista}" id="cambiarLista">
+									<option value="0" selected>Cambiar de lista</option>
+									<option value="pendientes">Pendientes</option>
+									<option value="encurso">En curso</option>
+									<option value="terminado">Terminado</option>
+								</select>
+								
+						  </div>
+						 <!--
+						 <p class="mb-0"><strong>Acciones</strong></p>
+						 <div class="text-start btn-group-vertical" role="group" aria-label="Vertical button group">
+							  <button th:onclick="eliminarPrestamo([[${tarea.id_tarea}]]);" class="bg-secondary-subtle m-1 p-2 border border-0" data-bs-toggle="modal" data-bs-target="#eliminarTarea"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+								  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+								</svg>  Eliminar</button>
+						 </div>
+						 -->
+					    </div>
+					  </div>
+					</div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+		        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+		<!--modalEliminar-->
+		<div class="modal modal-sm fade" id="eliminarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar tarea</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+			      <div class="modal-body">
+			          <div class="mb-3">
+			            <p for="recipient-name" class="col-form ms-0 mb-2 text-start">¿Esta seguro que quiere eliminar la tarea ?</p>
+			          </div>
+			          <form>
+					      <div>
+					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					        <button class="btn btn-danger" th:onclick="eliminarPrestamo(${prestamo.id})">Eliminar</button>
+				         </div>
+			         </form>
+			      </div>
+			      
+		      <div class="modal-footer">
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		
+		<!-- Modal alerta -->
+			<div>
+				<div class="modal fade" id="modalAlerta" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-sm">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        <label id="textAlerta">¿Esta seguro que sea eliminar la tarea?</label>
+				        <input id="hiddenId" type="hidden">
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				        <button type="button" class="btn btn-danger" id="alerta" th:onclick="botonEliminar()">Aceptar</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			<div>
+		
+</body>
+</html>

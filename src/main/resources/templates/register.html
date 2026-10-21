@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project.ppml</title>
+    <link rel="icon" th:href="@{Images/icono.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{css/stylesRegister.css}">
+</head>
+<script th:src="@{js/jquery-3.7.1.min.js}"></script>
+<script th:src="@{js/popper.min.js}"></script>
+<script th:src="@{js/bootstrap.js}"></script>
+<script th:src="@{js/register.js}"></script> 
+<body>
+
+    <!--Encabezado-->
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand">
+            <img th:src="@{Images/logo.png}" alt="Logo" width="35" height="24" class="d-inline-block align-text-top">
+            Project.ppml
+          </a>
+        </div>
+      </nav>
+
+    <!--Registro-->
+    <div class="container m-auto">
+        <form class="p-5 bg-light bg-opacity-75 rounded mt-5 needs-validation" novalidate method="post" th:action="saveUsuario" th:object="${usuario}">
+            <h2>Registrate</h2>
+            <div id="mensajeError" class="alert alert-danger d-none" role="alert"></div>
+            <div class="mb-3">
+                <label class="form-label">Nombre(completo)</label>
+                <input type="text" class="form-control" th:field="*{nombre}" required>
+              </div>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" th:field="*{correo_electronico}" required>
+              <div class="invalid-feedback">
+		        Ingrese una dirección de correo válida
+		      </div>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Contrase&ntilde;a</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" th:field="*{contrasena}" required>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputRol1" class="form-label">Rol</label>
+              <select class="form-select" th:field="*{rol}" required>
+				  <option value="0">Seleccione una opci&oacute;n</option>
+				  <option value="Estudiante">Estudiante</option>
+				  <option value="Docente">Docente</option>
+				  <option value="Otro">Otro</option>
+			  </select>
+            </div>
+            <input type="hidden" id="imagenUsuario" th:field="*{imagen_usuario}">
+            <button type="submit" class="btn btn-primary" th:onclick="getRandomColor();">Registrar</button>
+          </form>
+    </div>
+<script>
+    (function(){
+        var error = new URLSearchParams(window.location.search).get('error');
+        var mensajes = {campos: 'Complete todos los campos obligatorios.', rol: 'Seleccione un rol.', correo: 'El correo ya está registrado.'};
+        if(error && mensajes[error]){
+            var aviso = document.getElementById('mensajeError');
+            aviso.innerText = mensajes[error];
+            aviso.classList.remove('d-none');
+        }
+    })();
+</script>
+</body>
+</html>

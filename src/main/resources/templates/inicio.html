@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Project.ppml</title>
+    
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{css/stylesInicio.css}">
+    <link rel="icon" th:href="@{Images/icono.ico}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <script th:src="@{js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{js/popper.min.js}"></script>
+    <script th:src="@{js/bootstrap.js}"></script>
+    <script th:src="@{js/inicio.js}"></script> 
+
+    <div>
+        <nav class="navbar bg-body-tertiary navbar-expand-md">
+            <div class="container-fluid">
+                <a class="navbar-brand">
+                    <img th:src="@{Images/logo.png}" alt="Logo" width="35" height="24" class="d-inline-block align-text-top">
+                </a>
+                <button type="button" id="agregar" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary">Agregar</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div><p id="titulo">Mis Proyectos</p></div>
+			<div id="cardContainer" class="row"></div>
+			
+            <!-- Modal agregar -->
+            <form method="post" th:action="saveProyecto" th:object="${proyectos}">
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Agregar</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="nombres">Nombre</p>
+                                <input placeholder="Nombre" th:field="*{nombre}" class="inputs" id="nombre" required>
+
+                                <p class="nombres">Descripci&oacute;n</p>
+                                <textarea placeholder="Descripción" th:field="*{descripcion}" class="inputs" id="descripcion" required></textarea>
+
+                                <p class="nombres">Fecha de inicio</p>
+                                <input type="date" th:field="*{fecha_inicio}" class="inputs" id="fecha_inicio" required>
+
+                                <p class="nombres">Fecha de finalizaci&oacute;n</p>
+                                <input type="date" th:field="*{fecha_finalizacion}" class="inputs" id="fecha_finalizacion" required>
+
+                                <p class="nombres">Estado del proyecto</p>
+                                <select th:field="*{estado_proyecto}" class="inputs" id="estado_proyecto" required>
+                                    <option value="0">Seleccione una opci&oacute;n</option> 
+                                    <option value="En proceso">En proceso</option>
+                                    <option value="Finalizado">Finalizado</option>
+                                </select>
+
+                                <p class="nombres">Fondo</p>
+                                <input type="hidden" th:field="*{fondo}" class="inputs" id="fondo" required>
+                                <button type="button" class="btn btn-primary" onclick="mostrarFondos()">Elegir un color de fondo</button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" id="guardar" class="btn btn-primary" th:onclick="asignarFondo();">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Modal editar -->
+            <form method="post" th:action="saveProyecto" th:object="${proyectos}">
+                <div class="modal fade" id="modalEditar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="modalEditar">Editar</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="id" th:field="*{id_proyecto}"> 
+
+                                <p class="nombres">Nombre</p>
+                                <input placeholder="Nombre" th:field="*{nombre}" class="inputs" id="editarNombre" required>
+
+                                <p class="nombres">Descripci&oacute;n</p>
+                                <textarea placeholder="Descripción" th:field="*{descripcion}" class="inputs" id="editarDescripcion" required></textarea>
+
+                                <p class="nombres">Fecha de inicio</p>
+                                <input type="date" th:field="*{fecha_inicio}" class="inputs" id="editar_fecha_inicio" required>
+
+                                <p class="nombres">Fecha de finalizaci&oacute;n</p>
+                                <input type="date" th:field="*{fecha_finalizacion}" class="inputs" id="editar_fecha_finalizacion" required>
+
+                                <p class="nombres">Estado del proyecto</p>
+                                <select th:field="*{estado_proyecto}" class="inputs" id="editar_estado_proyecto" required>
+                                    <option value="0">Seleccione una opci&oacute;n</option> 
+                                    <option value="En proceso">En proceso</option>
+                                    <option value="Finalizado">Finalizado</option>
+                                </select>
+
+                                <p class="nombres">Fondo</p>
+                                <input type="hidden" th:field="*{fondo}" class="inputs" id="editar_fondo" required>
+                                <button type="button" class="btn btn-primary" onclick="mostrarFondos()">Elegir un color de fondo</button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" id="guardar" class="btn btn-primary" th:onclick="asignarFondoEditar();">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Modal alerta -->
+            <div class="modal fade" id="modalAlerta" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAlertaLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label id="textAlerta">¿Está seguro que desea eliminar el proyecto?</label>
+                            <input id="hiddenId" type="hidden">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-danger" id="alerta" onclick="botonEliminar()">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dialogo de imagenes de fondo -->
+            <dialog id="imagenesFondo">
+                <button type="button" class="btn-close" onclick="cerrarFondos()" aria-label="Close"></button>
+                <div><p id='fondosTitulos'>Sólidos</p></div>
+                <div class='d-flex flex-wrap align-content-between'>
+                    <img th:src="@{Images/naranja.png}" alt="Color naranja" width="50px" height="30px" onclick="guardarRutaImagen('/Images/naranja.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/durazno.png}" alt="Color durazno" width="50px" height="30px" onclick="guardarRutaImagen('/Images/durazno.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/azulAqua.png}" alt="Color aqua" width="50px" height="30px" onclick="guardarRutaImagen('/Images/azulAqua.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/azulCeleste.png}" alt="Color azul celeste" width="50px" height="30px" onclick="guardarRutaImagen('/Images/azulCeleste.png');" class="rounded popover-image" id="imagenes">
+                </div>
+                <div>
+                    <img th:src="@{Images/lima.png}" alt="Color lima" width="50px" height="30px" onclick="guardarRutaImagen('/Images/lima.png');" class="rounded popover-image" id="imagenes">                    
+                    <img th:src="@{Images/azulCobalto.png}" alt="Color cobalto" width="50px" height="30px" onclick="guardarRutaImagen('/Images/azulCobalto');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/azulReal.png}" alt="Color azul" width="50px" height="30px" onclick="guardarRutaImagen('/Images/azulReal');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/azulTurquesa.png}" alt="Color turquesa" width="50px" height="30px" onclick="guardarRutaImagen('/Images/azulTurquesa');" class="rounded popover-image" id="imagenes">
+                </div>
+                <div>
+                    <img th:src="@{Images/magenta.png}" alt="Color magneta" width="50px" height="30px" onclick="guardarRutaImagen('/Images/magenta.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/morado.png}" alt="Color morado" width="50px" height="30px" onclick="guardarRutaImagen('/Images/morado');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/naranja.png}" alt="Color naranja" width="50px" height="30px" onclick="guardarRutaImagen('/Images/naranja');" class="rounded popover-image" id="imagenes">
+				    <img th:src="@{Images/negro.png}" alt="Color negro" width="50px" height="30px" onclick="guardarRutaImagen('/Images/negro');" class="rounded popover-image" id="imagenes">
+				</div>
+				<div>
+				    <img th:src="@{Images/rojoBrillante.png}" alt=" Color rojo" width="50px" height="30px" onclick="guardarRutaImagen('/Images/rojoBrillante');" class="rounded popover-image" id="imagenes">
+				    <img th:src="@{Images/rosa.png}" alt="Color rosa" width="50px" height="30px" onclick="guardarRutaImagen('/Images/rosa');" class="rounded popover-image" id="imagenes">
+				    <img th:src="@{Images/turquesaOscuro.png}" alt=" Color turquesaOscuro" width="50px" height="30px" onclick="guardarRutaImagen('/Images/turquesaOscuro');" class="rounded popover-image" id="imagenes">
+				</div>
+                <div><p id='fondosTitulos'>Degradado</p></div>
+                <div class='d-flex flex-wrap align-content-between'>
+                    <img th:src="@{Images/degradado1.png}" alt="Color degradado1" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado1.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/degradado2.png}" alt="Color degradado2" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado2.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/degradado3.png}" alt="Color degradado3" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado3.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/degradado4.png}" alt="Color degradado4" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado4.png');" class="rounded popover-image" id="imagenes">
+	              </div>  
+	              <div>                         
+	                <img th:src="@{Images/degradado5.png}" alt="Color degradado5" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado5.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/degradado6.png}" alt="Color degradado6" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado6.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/degradado7.png}" alt="Color degradado7" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado7.png');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/degradado8.png}" alt="Color degradado8" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado8.png');" class="rounded popover-image" id="imagenes">
+		          </div>
+		          <div>
+                    <img th:src="@{Images/degradado9.png}" alt="Color  degradado9" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado9.png');" class="rounded popover-image" id="imagenes">
+		            <img th:src="@{Images/degradado10.png}" alt="Color degradado10" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado10.png');" class="rounded popover-image" id="imagenes">
+				    <img th:src="@{Images/degradado11.png}" alt="Color degradado11" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado11.png');" class="rounded popover-image" id="imagenes">
+				    <img th:src="@{Images/degradado12.png}" alt="Color degradado12" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado12.png');" class="rounded popover-image" id="imagenes">
+			      </div>
+			      <div>
+                    <img th:src="@{Images/degradado13.png}" alt="Color degradado13" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado13.png');" class="rounded popover-image" id="imagenes">
+					<img th:src="@{Images/degradado14.png}" alt="Color degradado14" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado14.png');" class="rounded popover-image" id="imagenes">
+					<img th:src="@{Images/degradado15.png}" alt="Color degradado15" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado15.png');" class="rounded popover-image" id="imagenes">
+					<img th:src="@{Images/degradado16.png}" alt="Color degradado16" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado16.png');" class="rounded popover-image" id="imagenes">
+				</div>
+				<div>
+					<img th:src="@{Images/degradado17.png}" alt="Color degradado17" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado17.png');" class="rounded popover-image" id="imagenes">
+					<img th:src="@{Images/degradado18.png}" alt="Color degradado18" width="50px" height="30px" onclick="guardarRutaImagen('/Images/degradado18.png');" class="rounded popover-image" id="imagenes">	
+                </div>
+                <div><p id='fondosTitulos'>Animaciones</p></div>
+                <div class='d-flex flex-wrap align-content-between'>
+					<img th:src="@{Images/animacion1.gif}" alt="Color animacion1" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion1.gif');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/animacion2.gif}" alt="Color animacion2" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion2.gif');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/animacion3.gif}" alt="Color animacion3" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion3.gif');" class="rounded popover-image" id="imagenes">
+                    <img th:src="@{Images/animacion4.gif}" alt="Color animacion4" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion4.gif');" class="rounded popover-image" id="imagenes">
+                </div>
+                <div>
+                     <img th:src="@{Images/animacion5.gif}" alt="Color animacion5" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion5.gif');" class="rounded popover-image" id="imagenes">
+                     <img th:src="@{Images/animacion6.gif}" alt="Color animacion6" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion6.gif');" class="rounded popover-image" id="imagenes">
+                     <img th:src="@{Images/animacion7.gif}" alt="Color animacion7" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion7.gif');" class="rounded popover-image" id="imagenes">
+                     <img th:src="@{Images/animacion8.gif}" alt="Color animacion8" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion8.gif');" class="rounded popover-image" id="imagenes">
+                </div>
+                <div>
+                     <img th:src="@{Images/animacion9.gif}" alt="Color animacion9" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion9.gif');" class="rounded popover-image" id="imagenes">
+                     <img th:src="@{Images/animacion10.gif}" alt="Color animacion10" width="50px" height="30px" onclick="guardarRutaImagen('/Images/animacion10.gif');" class="rounded popover-image" id="imagenes">
+
+                
+            </dialog>
+
+            <div class="container text-center">
+                <div class="row align-items-start" id="tarjetas">
+                    <div class="col" id="proyectos" th:each="proyectos: ${listadoProyectos}">
+                        <div id="tarjeta" class="card" style="width: 18rem;">
+                            <img th:src="@{${proyectos.fondo}}" class="card-img-top" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${proyectos.nombre}">Nombre del proyecto</h5>
+                                <p class="card-text" th:text="${proyectos.descripcion}">Descripción del proyecto</p>
+                                <p class="card-text" th:text="${proyectos.fecha_inicio}">Fecha de inicio del proyecto</p>
+                                <p class="card-text" th:text="${proyectos.fecha_finalizacion}">Fecha de finalización del proyecto</p>
+                                <p class="card-text" th:text="${proyectos.estado_proyecto}">Estado del proyecto</p>
+                                <button type="button" class="btn btn-primary" th:id="${proyectos.id_proyecto}" data-bs-toggle="modal" data-bs-target="#modalEditar" onclick="botonEditar(this.id)">Editar</button>
+                                <button type="button" class="btn btn-danger" th:id="${proyectos.id_proyecto}" data-bs-toggle="modal" data-bs-target="#modalAlerta" onclick="botonAlerta(this.id)">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function mostrarFondos() {
+        const dialog = document.getElementById('imagenesFondo');
+        if (dialog) {
+            dialog.showModal();
+        }
+    }
+
+    function cerrarFondos() {
+        const dialog = document.getElementById('imagenesFondo');
+        if (dialog) {
+            dialog.close();
+        }
+    }
+
+    function guardarRutaImagen(ruta) {
+        const fondoInput = document.getElementById('fondo');
+        const editarFondoInput = document.getElementById('editar_fondo');
+        if (fondoInput) {
+            fondoInput.value = ruta;
+        }
+        if (editarFondoInput) {
+            editarFondoInput.value = ruta;
+        }
+        cerrarFondos();
+    }
+
+    /*function botonEditar(id) {
+        $.ajax({
+            url: '/getProyecto/' + id,
+            type: 'GET',
+            success: function(data) {
+                $('#id').val(data.id_proyecto);
+                $('#editarNombre').val(data.nombre);
+                $('#editarDescripcion').val(data.descripcion);
+                $('#editar_fecha_inicio').val(data.fecha_inicio);
+                $('#editar_fecha_finalizacion').val(data.fecha_finalizacion);
+                $('#editar_estado_proyecto').val(data.estado_proyecto);
+                $('#editar_fondo').val(data.fondo);
+            },
+            error: function() {
+                alert('Error al obtener los datos del proyecto');
+            }
+        });
+    }
+
+    function botonAlerta(id) {
+        const hiddenId = document.getElementById('hiddenId');
+        if (hiddenId) {
+            hiddenId.value = id;
+        }
+    }*/
+</script>

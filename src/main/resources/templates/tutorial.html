@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+	    <title>Tutorial</title>
+	    <link rel="icon" th:href="@{Images/icono.ico}">
+	    
+	    <style>
+			body, html{
+				margin: 0;
+				padding: 0;
+				height: 100%;
+				overflow: hidden;
+			}
+			
+			video{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		</style>
+		
+	</head>
+	<body>
+		<video autoplay loop controls>
+			<source th:src="@{Images/tutorial.mp4}" type="video/mp4">
+			Tu navegador no soporta la etiqueta de video
+		</video>
+	</body>
+</html>

@@ -1,0 +1,67 @@
+body{
+	background-image: url("/Images/fondo3.png");
+}
+
+.container{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+
+#titulo{
+  font-family: "Poetsen One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 30px;
+  margin-top: 15px;
+  color: white;
+}
+
+#guardar{
+	border-radius: 10px;
+	background-color: #483078;
+	color: white;
+	padding: 10px;
+	border: none;
+}
+
+#agregar{
+	border-radius: 10px;
+	background-color: #483078;
+	color: white;
+	padding: 10px;
+	border: none;
+}
+
+#staticBackdropLabel{
+	font-size: 20px;
+}
+
+.nombres{
+	margin-bottom: 2px;
+}
+
+.inputs{
+	margin-bottom: 15px;
+}
+
+#imagenes{
+	margin: 5px;
+	cursor: pointer;
+}
+
+#fondosTitulos{
+	margin-top: 12px;
+	margin-bottom: 2px;
+}
+
+.dropdown-item:hover{
+  /*Modifica lo que quieras*/
+	background:#d9d9db;
+  	color:#616668;
+}

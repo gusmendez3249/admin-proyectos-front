@@ -1,0 +1,110 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project.ppml</title>
+    <link rel="icon" th:href="@{Images/icono.ico}">
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{css/stylesLogin.css}">
+</head>
+<script th:src="@{js/jquery-3.7.1.min.js}"></script>
+<script th:src="@{js/popper.min.js}"></script>
+<script th:src="@{js/bootstrap.js}"></script>
+<script th:src="@{js/login.js}"></script> 
+<body>
+
+    <!--Encabezado-->
+    
+    <nav class="navbar bg-body-tertiary navbar-expand-md">
+        <div class="container-fluid">
+          <a class="navbar-brand">
+            <img th:src="@{Images/logo.png}" alt="Logo" width="35" height="24" class="d-inline-block align-text-top">
+            Proyecto.ppml
+          </a>
+        </div>
+      </nav>
+      
+     <!--ToastAlert1--> 
+     <div class="toast align-items-center" id="alerta1" role="alert" aria-live="assertive" aria-atomic="true">
+	 	<div class="d-flex">
+			<div class="toast-body">
+				Ingrese un email y una contraseña
+			</div>
+			<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+	</div>
+	
+	<!--ToastAlert2-->
+	<div class="toast align-items-center" id="alerta2" role="alert" aria-live="assertive" aria-atomic="true">
+	 	<div class="d-flex">
+			<div class="toast-body">
+				Ingrese un email
+			</div>
+			<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+	</div>
+	
+	<!--ToastAlert3-->
+	<div class="toast align-items-center" id="alerta3" role="alert" aria-live="assertive" aria-atomic="true">
+	 	<div class="d-flex">
+			<div class="toast-body">
+				Ingrese una direccion de correo electronico válida
+			</div>
+			<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+	</div>
+	
+	<!--ToastAlert4-->
+	<div class="toast align-items-center" id="alerta4" role="alert" aria-live="assertive" aria-atomic="true">
+	 	<div class="d-flex">
+			<div class="toast-body">
+				Ingrese una contraseña
+			</div>
+			<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+	</div>
+	
+	<!--ToastAlert5-->
+	<div class="toast align-items-center" id="alerta5" role="alert" aria-live="assertive" aria-atomic="true">
+	 	<div class="d-flex">
+			<div class="toast-body">
+				El usuario o contraseña no existen
+			</div>
+			<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+	</div>
+
+	<div class="toast align-items-center" id="alerta6" role="alert" aria-live="assertive" aria-atomic="true">
+	 	<div class="d-flex">
+			<div class="toast-body">
+				El servicio no está disponible, intente más tarde
+			</div>
+			<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+	</div>
+          
+
+    <!--Login-->
+    <div class="container m-auto">
+        <form class="p-5 bg-light bg-opacity-75 rounded mt-5">
+            <h2>Iniciar sesi&oacute;n</h2>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            </div>
+      
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Contrase&ntilde;a</label>
+              <input type="password" class="form-control" id="exampleInputPassword1">
+            </div>
+            
+            <button type="button" th:onclick="validarLogin()" class="btn btn-primary">Iniciar sesis&oacute;n</button>
+            <div class="form-text mt-2">
+                ¿No tienes una cuenta? 
+                <a th:href="@{/register}">Crea una</a>
+            </div>
+          </form>
+         
+    </div>
+</body>
+</html>
