@@ -54,12 +54,16 @@ pipeline {
             }
         }
 
-        stage('Analisis Semgrep (OWASP Top 10)') {
+        stage('Analisis Semgrep (OWASP Top 10 + reglas propias)') {
             steps {
+                // Se excluye solo la carpeta target (codigo compilado); el codigo fuente se analiza completo.
+                // .semgrep/ contiene las reglas de las incidencias reales encontradas en la revision.
                 sh '''
                     semgrep --version
-                    semgrep scan --config p/owasp-top-ten --metrics=off --exclude target \
-                        --json-output=semgrep-report.json --sarif-output=semgrep-report.sarif .
+                    semgrep scan --config p/owasp-top-ten --config p/java --config p/javascript \
+                        --config p/secrets --config .semgrep/ --metrics=off --exclude target \
+                        --json-output=semgrep-report.json --sarif-output=semgrep-report.sarif \
+                        --text-output=semgrep-report.txt .
                 '''
             }
             post {

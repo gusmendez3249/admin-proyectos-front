@@ -5,6 +5,9 @@ public class Usuario {
 	private Integer id_usuario;
 	private String nombre;
 	private String correo_electronico;
+	// Falso positivo: este modelo debe serializar la contraseña para enviarla a la API
+	// (registro / login). La API nunca la devuelve (WRITE_ONLY), así que al navegador llega null.
+	// nosemgrep: contrasena-expuesta-en-json
 	private String contrasena;
 	private String rol;
 	private String imagen_usuario;

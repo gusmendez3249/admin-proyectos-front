@@ -1,0 +1,81 @@
+# Reglas propias de Semgrep para admin-proyectos.
+# Detectan las incidencias reales encontradas en la revisión del código (ver
+# evidencia-practica3/clasificacion-incidencias.md). Se ejecutan en el pipeline junto
+# con p/owasp-top-ten:  semgrep scan --config p/owasp-top-ten --config .semgrep/ --exclude target .
+rules:
+  - id: comparacion-equals-null
+    languages: [java]
+    severity: WARNING
+    message: >-
+      "$X.equals(null)" nunca es verdadero (y lanza NullPointerException si $X es null).
+      Use "$X != null".
+    metadata:
+      category: correctness
+      cwe: "CWE-480: Use of Incorrect Operator"
+    pattern: $X.equals(null)
+
+  - id: contrasena-expuesta-en-json
+    languages: [java]
+    severity: ERROR
+    message: >-
+      El campo de contraseña se serializa en las respuestas JSON. Anótelo con
+      @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) o use un DTO.
+    metadata:
+      category: security
+      cwe: "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      owasp: "A01:2021 - Broken Access Control"
+    patterns:
+      - pattern: private String $CAMPO;
+      - metavariable-regex:
+          metavariable: $CAMPO
+          regex: (?i)^(contrasena|password|pass|clave)$
+      - pattern-not-inside: |
+          @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+          private String $CAMPO;
+      - pattern-not-inside: |
+          @JsonIgnore
+          private String $CAMPO;
+
+  - id: contrasena-comparada-en-texto-plano
+    languages: [java]
+    severity: INFO
+    message: >-
+      La contraseña se compara en texto plano dentro de la consulta SQL: se almacena sin hash.
+      Riesgo aceptado temporalmente (ver clasificación de incidencias); migrar a BCrypt.
+    metadata:
+      category: security
+      cwe: "CWE-256: Plaintext Storage of a Password"
+      owasp: "A02:2021 - Cryptographic Failures"
+    pattern-regex: (?i)contrasena\s*=\s*:contrasena
+
+  - id: salida-por-consola
+    languages: [java]
+    severity: WARNING
+    message: Use un Logger (SLF4J) en lugar de System.out / System.err.
+    metadata:
+      category: maintainability
+    pattern-either:
+      - pattern: System.out.println(...)
+      - pattern: System.err.println(...)
+
+  - id: url-backend-codificada
+    languages: [java]
+    severity: WARNING
+    message: >-
+      URL del backend escrita en el código. Léala de configuración
+      (@Value / variable de entorno) para poder desplegar en otros entornos.
+    metadata:
+      category: configuration
+      cwe: "CWE-547: Use of Hard-coded, Security-relevant Constants"
+    pattern-regex: \"https?://(localhost|127\.0\.0\.1):\d+/
+
+  - id: datos-de-usuario-en-consola-js
+    languages: [javascript]
+    severity: WARNING
+    message: >-
+      Se imprime en la consola del navegador la respuesta del login (datos personales del usuario).
+    metadata:
+      category: security
+      cwe: "CWE-532: Insertion of Sensitive Information into Log File"
+    pattern: |
+      $.ajax({..., url: "/verificarLogin", ..., success: function($D) { ... console.log($D); ... }, ...})

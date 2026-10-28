@@ -34,7 +34,6 @@ function validarLogin(){
 			data : JSON.stringify({correo_electronico: $("#exampleInputEmail1").val(), contrasena:$("#exampleInputPassword1").val()}),
 			type : "POST",
 			success: function(data){
-				console.log(data);
 				if(data.nombre == '000'){
 					document.getElementById("exampleInputEmail1").focus();
 					var myToast = document.querySelector('#alerta5');
