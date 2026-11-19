@@ -1,0 +1,12 @@
+target/
+.git/
+.mvn/
+.semgrep/
+.idea/
+.vscode/
+devops/
+*.ps1
+*.md
+.env
+.env.*
+Jenkinsfile

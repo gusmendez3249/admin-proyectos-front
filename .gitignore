@@ -34,3 +34,7 @@ build/
 
 ### Reportes de Semgrep ###
 semgrep-report.*
+
+### Variables de entorno con secretos ###
+.env
+!.env.example
