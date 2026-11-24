@@ -393,6 +393,8 @@ public class GestorController {
 	/** Errores al comunicarse con el backend (caído, 4xx/5xx): respuesta controlada para la interfaz. */
 	@ExceptionHandler(RestClientException.class)
 	public ResponseEntity<Map<String, String>> errorBackend(RestClientException e) {
+		// Se registra para que la falla sea visible en Loki/Grafana (antes se respondia 503 sin dejar rastro)
+		log.warn("Backend no disponible, se responde 503: {}", e.getMessage());
 		Map<String, String> cuerpo = new HashMap<String, String>();
 		cuerpo.put("mensaje", "El servicio no está disponible, intente más tarde.");
 		return new ResponseEntity<Map<String, String>>(cuerpo, HttpStatus.SERVICE_UNAVAILABLE);
