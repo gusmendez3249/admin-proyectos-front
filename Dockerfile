@@ -15,8 +15,9 @@ RUN addgroup -S app && adduser -S app -G app
 COPY --from=build /app/target/*.jar app.jar
 USER app
 EXPOSE 8082
+# 9082: puerto interno de Actuator (health y metricas); no se publica
 # La URL de la API llega por la variable de entorno GESTOR_API_URL
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75"
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-  CMD wget -qO- http://localhost:8082/actuator/health || exit 1
+  CMD wget -qO- http://localhost:9082/actuator/health || exit 1
 ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
