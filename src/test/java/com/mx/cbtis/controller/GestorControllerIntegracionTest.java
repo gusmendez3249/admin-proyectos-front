@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -140,6 +141,29 @@ class GestorControllerIntegracionTest {
 				.content("{\"correo_electronico\":\"ana.qa@mail.com\",\"contrasena\":\"1234\"}"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.nombre").value("Ana QA"));
+	}
+
+	@Test
+	@DisplayName("AUT-E17 Regresion: las respuestas reenviadas no copian cabeceras de transporte del backend")
+	void AUT_E17_noCopiaCabecerasDeTransporte() throws Exception {
+		// Hallazgo de la prueba de carga (k6): se copiaba Transfer-Encoding/Content-Length del backend
+		// y Tomcat agregaba los suyos, dejando "Transfer-Encoding: chunked" duplicado.
+		backendResponde("/getUsuarioLogin", 200, "{\"id_usuario\":7,\"nombre\":\"Ana QA\"}");
+		backendResponde("/addTareas", 200, "1");
+		backendResponde("/addComentario", 200, "1");
+
+		String[][] peticiones = {
+				{ "/verificarLogin", "{\"correo_electronico\":\"ana.qa@mail.com\",\"contrasena\":\"1234\"}" },
+				{ "/verificarTarea", "{\"nombre\":\"Nueva\",\"id_proyecto\":197}" },
+				{ "/cambiosTareas", "{\"id_tarea\":199,\"lista\":\"terminado\"}" },
+				{ "/saveComentario", "{\"texto_comentario\":\"ok\",\"id_tarea\":199}" } };
+		for (String[] p : peticiones) {
+			mockMvc.perform(post(p[0]).contentType(MediaType.APPLICATION_JSON).content(p[1]))
+					.andExpect(status().isOk())
+					.andExpect(header().doesNotExist("Transfer-Encoding"))
+					.andExpect(header().doesNotExist("Content-Length"))
+					.andExpect(header().doesNotExist("Date"));
+		}
 	}
 
 	// ------------------------------------------------------------------ casos de fracaso

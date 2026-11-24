@@ -173,13 +173,23 @@ public class GestorController {
 	}
 	
 	
+	/**
+	 * Reenvia al navegador solo el estado y el cuerpo de la respuesta del backend.
+	 * Las cabeceras de transporte del backend (Transfer-Encoding, Content-Length, Date) no se copian:
+	 * Tomcat genera las suyas y, si se copiaban, la respuesta llevaba "Transfer-Encoding: chunked"
+	 * duplicado, que los clientes HTTP estrictos rechazan (hallazgo de la prueba de carga con k6).
+	 */
+	private static <T> ResponseEntity<T> reenviar(ResponseEntity<T> respuesta) {
+		return ResponseEntity.status(respuesta.getStatusCode()).body(respuesta.getBody());
+	}
+
 	@PostMapping("/verificarLogin")
 	public ResponseEntity<Usuario> verificarUsuario(@RequestBody Usuario paramUser) {
 		String urlservicebd = urlApi + "/getUsuarioLogin";
 		RestTemplate  template = new RestTemplate();
 		ResponseEntity<Usuario> response = template.postForEntity(urlservicebd,paramUser,Usuario.class);
 		
-		return response;
+		return reenviar(response);
 
 	}
 	
@@ -288,7 +298,7 @@ public class GestorController {
 		String urlservicebd = urlApi + "/addComentario";
 		ResponseEntity<Integer> response = template.postForEntity(urlservicebd, comentarios, Integer.class); 
 		
-		return response;
+		return reenviar(response);
 	}
 	
 	
@@ -329,7 +339,7 @@ public class GestorController {
 		String urlservicebd = urlApi + "/addTareas";
 		RestTemplate template = new RestTemplate();
 		ResponseEntity<Integer> response = template.postForEntity(urlservicebd, paramName, Integer.class);
-		return response;
+		return reenviar(response);
 	}
 	
 	@PostMapping("/cambiosTareas")
@@ -337,7 +347,7 @@ public class GestorController {
 		String urlservicebd = urlApi + "/addTareas";
 		RestTemplate template = new RestTemplate();
 		ResponseEntity<Integer> response = template.postForEntity(urlservicebd, paramDatos, Integer.class);
-		return response;
+		return reenviar(response);
 	}
 	
 	@PostMapping("/consultarTareas")
